@@ -52,3 +52,9 @@ make download COMx=COM6
 
 ![DEBUG](img/debug.png)
 ![UART](img/uart.png)
+
+
+- jtag connect and debug risc-v(hpmicro hpm6750)
+![JTAG](img/jtag connect hpm6750.png)
+![ses](img/debug for segger embedded studio.png)
+
