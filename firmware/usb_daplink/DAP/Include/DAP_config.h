@@ -342,12 +342,15 @@ Configures the DAP Hardware I/O pins for JTAG mode:
 */
 __STATIC_INLINE void PORT_JTAG_SETUP(void)
 {
+    gpio_set_mode(PIN_SWDIO_TMS, GPIO_OUTPUT_PD_MODE);
+    gpio_set_mode(PIN_SWCLK_TCK, GPIO_OUTPUT_PD_MODE);
+    gpio_set_mode(PIN_TDI, GPIO_OUTPUT_PD_MODE);
+    gpio_set_mode(PIN_nRESET, GPIO_OUTPUT_PP_MODE);
+    gpio_set_mode(PIN_TDO, GPIO_INPUT_MODE);
     gpio_write(PIN_SWDIO_TMS, 1U);
     gpio_write(PIN_SWCLK_TCK, 1U);
     gpio_write(PIN_TDI, 1U);
-    gpio_set_mode(PIN_SWDIO_TMS, GPIO_OUTPUT_MODE);
-    gpio_set_mode(PIN_SWCLK_TCK, GPIO_OUTPUT_MODE);
-    gpio_set_mode(PIN_TDI, GPIO_OUTPUT_MODE);
+    gpio_write(PIN_nRESET, 1U);
 }
 
 /** Setup SWD I/O pins: SWCLK, SWDIO, and nRESET.
@@ -369,9 +372,11 @@ Disables the DAP Hardware I/O pins which configures:
 */
 __STATIC_INLINE void PORT_OFF(void)
 {
-    gpio_set_mode(PIN_SWDIO_TMS, GPIO_INPUT_PP_MODE);
-    gpio_set_mode(PIN_SWCLK_TCK, GPIO_INPUT_PP_MODE);
-    gpio_set_mode(PIN_TDI, GPIO_INPUT_PP_MODE);
+    gpio_set_mode(PIN_SWDIO_TMS, GPIO_INPUT_MODE);
+    gpio_set_mode(PIN_SWCLK_TCK, GPIO_INPUT_MODE);
+    gpio_set_mode(PIN_TDI, GPIO_INPUT_MODE);
+    gpio_set_mode(PIN_TDO, GPIO_INPUT_MODE);
+    gpio_set_mode(PIN_nRESET, GPIO_INPUT_MODE);
 }
 
 // SWCLK/TCK I/O pin -------------------------------------
@@ -539,7 +544,8 @@ __STATIC_INLINE void PIN_nTRST_OUT(uint32_t bit)
 */
 __STATIC_INLINE uint32_t PIN_nRESET_IN(void)
 {
-    return !!gpio_read(PIN_nRESET);
+    // return !!gpio_read(PIN_nRESET);
+    return (*(uint32_t *)(GLB_BASE + GLB_GPIO_INPUT_OFFSET) >> PIN_nRESET) & 1U;
 }
 
 /** nRESET I/O pin: Set Output.
